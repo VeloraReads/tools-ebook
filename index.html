@@ -1,768 +1,650 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineStream - Streaming Film Legal dengan Komentar Otomatis</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        /* === RESET & BASE STYLE === */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0f172a;
-            color: #f1f5f9;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* === IKLAN SECTION STYLE === */
-        .ad-top {
-            background-color: #1e293b;
-            padding: 12px 0;
-            text-align: center;
-            border-bottom: 2px solid #3b82f6;
-        }
-
-        .ad-top a {
-            display: inline-block;
-            width: 100%;
-            max-width: 728px;
-            height: 90px;
-            background-color: #2d3748;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #3b82f6;
-            font-weight: 600;
-            text-decoration: none;
-            border: 1px dashed #475569;
-        }
-
-        .ad-middle {
-            background-color: #1e293b;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            margin: 25px 0;
-            border: 1px dashed #475569;
-        }
-
-        .ad-middle a {
-            display: inline-block;
-            width: 100%;
-            max-width: 970px;
-            height: 90px;
-            background-color: #2d3748;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #3b82f6;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .ad-sidebar {
-            background-color: #1e293b;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px dashed #475569;
-            margin-bottom: 25px;
-        }
-
-        .ad-sidebar a {
-            display: block;
-            width: 100%;
-            height: 250px;
-            background-color: #2d3748;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #3b82f6;
-            text-decoration: none;
-            margin-bottom: 10px;
-        }
-
-        .popunder-ad {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #1e293b;
-            width: 380px;
-            max-width: 90%;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
-            z-index: 9999;
-        }
-
-        .popunder-ad.active {
-            display: block;
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .close-popunder {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 1.2rem;
-            cursor: pointer;
-            position: absolute;
-            top: 15px;
-            right: 15px;
-        }
-
-        .popunder-content h4 {
-            margin-bottom: 15px;
-            color: #3b82f6;
-        }
-
-        .popunder-content a {
-            display: block;
-            width: 100%;
-            height: 200px;
-            background-color: #2d3748;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #3b82f6;
-            text-decoration: none;
-        }
-
-        /* === HEADER STYLE === */
-        header {
-            background-color: #1e293b;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 998;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #3b82f6;
-            display: flex;
-            align-items: center;
-        }
-
-        .logo i {
-            margin-right: 10px;
-        }
-
-        .search-box {
-            width: 100%;
-            max-width: 400px;
-            position: relative;
-            margin: 10px 0;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 10px 40px 10px 15px;
-            border-radius: 25px;
-            border: none;
-            background-color: #2d3748;
-            color: #f1f5f9;
-            outline: none;
-        }
-
-        .search-box button {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #94a3b8;
-            cursor: pointer;
-        }
-
-        .nav-menu {
-            display: none;
-            gap: 20px;
-            font-weight: 500;
-        }
-
-        .nav-menu a {
-            color: #f1f5f9;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-menu a i {
-            margin-right: 8px;
-        }
-
-        .menu-toggle {
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .mobile-menu {
-            display: none;
-            background-color: #1e293b;
-            padding: 15px 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            position: absolute;
-            top: 100%;
-            right: 20px;
-            border-radius: 10px;
-            z-index: 999;
-        }
-
-        .mobile-menu.active {
-            display: block;
-        }
-
-        .mobile-menu a {
-            display: block;
-            padding: 10px 0;
-            color: #f1f5f9;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-
-        .mobile-menu a i {
-            margin-right: 8px;
-        }
-
-        /* === STREAMING SECTION STYLE === */
-        .stream-section {
-            margin: 30px 0;
-        }
-
-        .stream-container {
-            background-color: #1e293b;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .player-title {
-            font-size: 1.5rem;
-            color: #3b82f6;
-            margin-bottom: 15px;
-        }
-
-        .youtube-player {
-            position: relative;
-            width: 100%;
-            height: 0;
-            padding-bottom: 56.25%; /* Rasio 16:9 */
-            overflow: hidden;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .youtube-player iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .film-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            font-size: 0.95rem;
-            color: #94a3b8;
-            margin-bottom: 10px;
-        }
-
-        .film-desc {
-            color: #e2e8f0;
-            line-height: 1.7;
-        }
-
-        /* === KOMENTAR SECTION STYLE === */
-        .comment-section {
-            background-color: #1e293b;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 30px 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .comment-title {
-            font-size: 1.4rem;
-            color: #3b82f6;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        .comment-title i {
-            margin-right: 10px;
-        }
-
-        .comment-count {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin-bottom: 20px;
-        }
-
-        .comment-input {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            align-items: center;
-        }
-
-        .comment-input img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .comment-input textarea {
-            flex: 1;
-            padding: 10px 15px;
-            border-radius: 20px;
-            border: none;
-            background-color: #2d3748;
-            color: #f1f5f9;
-            outline: none;
-            resize: none;
-            font-family: inherit;
-        }
-
-        .comment-input button {
-            padding: 10px 25px;
-            border-radius: 20px;
-            border: none;
-            background-color: #3b82f6;
-            color: #fff;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .comment-input button:hover {
-            background-color: #2563eb;
-        }
-
-        .comments-container {
-            max-height: 600px;
-            overflow-y: auto;
-            padding-right: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .comments-container::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .comments-container::-webkit-scrollbar-track {
-            background: #2d3748;
-            border-radius: 10px;
-        }
-
-        .comments-container::-webkit-scrollbar-thumb {
-            background: #3b82f6;
-            border-radius: 10px;
-        }
-
-        .comment-box {
-            display: flex;
-            gap: 15px;
-            background-color: #2d3748;
-            padding: 15px;
-            border-radius: 15px;
-            animation: slideIn 0.5s ease forwards;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .comment-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-
-        .comment-content {
-            flex: 1;
-        }
-
-        .comment-username {
-            font-weight: 600;
-            color: #3b82f6;
-            margin-bottom: 5px;
-        }
-
-        .comment-text {
-            color: #e2e8f0;
-            line-height: 1.5;
-            margin-bottom: 8px;
-        }
-
-        .comment-time {
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-
-        /* === FOOTER STYLE === */
-        footer {
-            background-color: #1e293b;
-            padding: 30px 0;
-            border-top: 2px solid #3b82f6;
-            margin-top: 30px;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-
-        .footer-section h3 {
-            color: #3b82f6;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-
-        .footer-section p, .footer-section a {
-            color: #94a3b8;
-            text-decoration: none;
-        }
-
-        .footer-section a:hover {
-            color: #3b82f6;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            font-size: 1.5rem;
-            margin-top: 15px;
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 20px;
-            margin-top: 20px;
-            border-top: 1px solid #2d3748;
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-
-        /* === RESPONSIVE BREAKPOINTS === */
-        @media (min-width: 768px) {
-            .nav-menu {
-                display: flex;
+    <title>Cinema Stream - Live Movie Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+   <link rel="icon" href="favicon.png" type="image/png">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1A2456',
+                        secondary: '#FF6B00',
+                        dark: '#121212',
+                        light: '#F5F5F5'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
             }
-
-            .menu-toggle {
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            }
+            .ad-hover {
+                transition: all 0.2s ease-in-out;
+            }
+            .ad-hover:hover {
+                transform: scale(1.02);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            }
+            .tab-content {
                 display: none;
             }
-
-            .mobile-menu {
-                display: none !important;
+            .tab-content.active {
+                display: block;
             }
-        }
-
-        @media (max-width: 767px) {
-            .header-content {
-                flex-direction: column;
-                align-items: flex-start;
+            .notification {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 100;
             }
-
-            .search-box {
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
                 width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 99;
             }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <!-- === IKLAN TOP === -->
-    <div class="ad-top">
-        <a href="https://link-iklan-anda.com" target="_blank" rel="noopener noreferrer">[BANNER IKLAN 728x90 DISINI]</a>
+<body class="bg-dark text-light font-sans">
+    <!-- Header Section -->
+    <header class="bg-primary shadow-lg sticky top-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-film text-secondary text-2xl md:text-3xl"></i>
+                <h1 class="text-xl md:text-2xl font-bold">Cinema<span class="text-secondary">Stream</span></h1>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="#" class="tab-link font-medium hover:text-secondary transition-colors active" data-tab="home">Home</a>
+                <a href="#" class="tab-link font-medium hover:text-secondary transition-colors" data-tab="schedule">Live Schedule</a>
+                <a href="#" class="tab-link font-medium hover:text-secondary transition-colors" data-tab="genres">Genres</a>
+                <a href="#" class="tab-link font-medium hover:text-secondary transition-colors" data-tab="about">About Us</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <button class="subscribe-btn bg-secondary hover:bg-secondary/90 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                    Subscribe
+                </button>
+                <button class="md:hidden text-xl" id="openMenu">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Overlay for Notification -->
+    <div class="overlay" id="notificationOverlay"></div>
+
+    <!-- Subscribe Confirmation Notification -->
+    <div class="notification bg-dark border border-gray-700 rounded-xl p-6 w-full max-w-sm" id="subscribeNotification">
+        <h3 class="text-xl font-bold text-center mb-4">Subscribe to CinemaStream?</h3>
+        <p class="text-gray-300 text-center mb-6">Get updates on new streams, exclusive content & special offers!</p>
+        <div class="flex space-x-3">
+            <button class="w-1/2 bg-secondary hover:bg-secondary/90 text-white py-2 rounded-lg font-medium transition-colors" id="confirmSubscribe">Yes</button>
+            <button class="w-1/2 border border-gray-600 hover:border-secondary hover:text-secondary py-2 rounded-lg font-medium transition-colors" id="cancelSubscribe">No</button>
+        </div>
     </div>
 
-    <!-- === HEADER === -->
-    <header>
-        <div class="container header-content">
-            <div class="logo">
-                <i class="fas fa-film"></i> CineStream
-            </div>
-            <div class="search-box">
-                <input type="text" placeholder="Cari film legal favoritmu...">
-                <button><i class="fas fa-search"></i></button>
-            </div>
-            <div class="nav-menu">
-                <a href="#stream"><i class="fas fa-play-circle"></i> Streaming</a>
-                <a href="#movie"><i class="fas fa-film"></i> Koleksi Film</a>
-                <a href="#comment"><i class="fas fa-comments"></i> Komentar</a>
-                <a href="#about"><i class="fas fa-info-circle">
-        </i> Tentang</a>
+    <!-- Main Tab Content -->
+    <main class="min-h-screen">
+        <!-- Home Tab (Active by Default) -->
+        <section id="home" class="tab-content active">
+            <!-- Hero Section -->
+            <div class="bg-gradient-to-b from-primary/30 to-dark py-6 md:py-10">
+                <div class="container mx-auto px-4">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <div class="mb-6 md:mb-0 md:w-1/2">
+                            <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold leading-tight">
+                                Live Movie Streaming<br>
+                                <span class="text-secondary">24/7 Non-Stop</span>
+                            </h2>
+                            <p class="mt-4 text-gray-300 text-lg max-w-md">
+                                Watch your favorite movies live on YouTube with high-quality streams. Don't miss exclusive premieres and special marathons!
+                            </p>
+                            <div class="mt-6 flex space-x-4">
+                                <a href="#stream" class="bg-secondary hover:bg-secondary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center">
+                                    <i class="fa fa-play-circle mr-2"></i> Watch Now
+                                </a>
+                                <a href="#" class="border border-gray-400 hover:border-secondary hover:text-secondary px-6 py-3 rounded-lg font-medium transition-colors">
+                                    See Schedule
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Featured Ad -->
+                        <div class="md:w-5/12">
+                            <div class="bg-dark/80 border border-gray-700 rounded-xl p-3 ad-hover">
+                                <h3 class="text-sm text-gray-400 font-medium mb-2 text-center">SPONSORED ADVERTISEMENT</h3>
+                                <a href="https://www.effectivegatecpm.com/xa2czpzj?key=2f6b2d68cfd2c71e6f65a12e02c4485f" target="_blank" rel="noopener noreferrer" class="block">
+                                    <img src="https://picsum.photos/seed/adfeature/600/350" alt="Featured Product Advertisement" class="w-full h-auto rounded-lg object-cover">
+                                    <p class="mt-2 text-center text-sm text-gray-300">Click to explore exclusive deals!</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="menu-toggle" id="menuToggle">
-                    <i class="fas fa-bars"></i>
-                </div>
             </div>
-        </header>
 
-        <!-- === IKLAN POPUNDER === -->
-        <div class="popunder-ad" id="popunderAd">
-            <button class="close-popunder" id="closePopunder">&times;</button>
-            <div class="popunder-content">
-                <h4>Promo Spesial!</h4>
-                <a href="https://link-iklan-popunder.com" target="_blank" rel="noopener noreferrer">
-                    <img src="https://picsum.photos/id/23/300/200" alt="Iklan Popunder">
-                </a>
-                <p>Dapatkan diskon hingga 50% untuk langganan streaming!</p>
+            <!-- Main Stream & Ads Section -->
+            <div id="stream" class="py-8 md:py-12">
+                <div class="container mx-auto px-4">
+                    <!-- Current Stream Info -->
+                    <div class="mb-8">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                            <div>
+                                <h3 class="text-gray-400 font-medium">NOW STREAMING</h3>
+                                <h2 class="text-2xl md:text-3xl font-bold">The Midnight Chronicles</h2>
+                            </div>
+                            <div class="flex items-center space-x-4 mt-3 md:mt-0">
+                                <span class="flex items-center text-gray-300">
+                                    <i class="fa fa-eye mr-2"></i> 12.5K Viewers
+                                </span>
+                                <span class="flex items-center text-gray-300">
+                                    <i class="fa fa-calendar mr-2"></i> Action | Fantasy
+                                </span>
+                            </div>
+                        </div>
+                        <div class="h-1 w-full bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-secondary" style="width: 65%"></div>
+                        </div>
+                        <p class="text-gray-400 text-sm mt-2">Stream ends in ~45 minutes | Next: "Ocean's Secret"</p>
+                    </div>
+
+                    <!-- Main Content Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Live Stream Container -->
+                        <div class="lg:col-span-2">
+                            <div class="bg-dark/50 border border-gray-800 rounded-xl overflow-hidden shadow-xl">
+                                <!-- YouTube Embed -->
+                                <div class="aspect-video w-full bg-black">
+                                    <iframe id = "player" width="100%" height="100%" src="https://www.youtube.com/embed/jQ-VgNAziHQ?autoplay=1&mute=1&enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Live Movie Stream"></iframe>
+                                </div>
+                                
+                                <!-- Stream Controls -->
+                                <div class="p-4 flex flex-wrap justify-between items-center border-t border-gray-800">
+                                    <div class="flex items-center space-x-4 mb-3 md:mb-0">
+                                        <button class="flex items-center space-x-1 hover:text-secondary transition-colors">
+                                            <i class="fa fa-thumbs-up"></i>
+                                            <span>2.4K</span>
+                                        </button>
+                                        <button class="flex items-center space-x-1 hover:text-secondary transition-colors">
+                                            <i class="fa fa-thumbs-down"></i>
+                                            <span>128</span>
+                                        </button>
+                                        <button class="flex items-center space-x-1 hover:text-secondary transition-colors">
+                                            <i class="fa fa-share-alt"></i>
+                                            <span>Share</span>
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <button class="bg-primary hover:bg-primary/80 px-4 py-2 rounded-lg font-medium transition-colors flex items-center">
+                                            <i class="fa fa-bell mr-2"></i> Get Notified
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- In-Stream Ad -->
+                            <div class="mt-6 bg-dark/50 border border-gray-800 rounded-xl p-4 ad-hover">
+                                <div class="flex flex-col md:flex-row items-center gap-4">
+                                    <a href="https://www.amazon.com/HyperX-Cloud-III-Multi-Platform-Detachable/dp/B0F6NZWPTC/ref=sxin_31_pa_sp_phone_search_thematic_sspa?content-id=amzn1.sym.d3032ef7-ff4e-4993-b4cb-842557e70d93%3Aamzn1.sym.d3032ef7-ff4e-4993-b4cb-842557e70d93&crid=S44OBVHI3MU2&cv_ct_cx=headset&keywords=headset&pd_rd_i=B0F6NZWPTC&pd_rd_r=6e4fe4fc-1df7-4301-b57b-0939e1758271&pd_rd_w=MnPop&pd_rd_wg=89KbL&pf_rd_p=d3032ef7-ff4e-4993-b4cb-842557e70d93&pf_rd_r=FSGT8CHW136H223G1WTT&qid=1772562352&sprefix=headset%2Caps%2C343&sr=1-1-2c727eeb-987f-452f-86bd-c2978cc9d8b9-spons&aref=l3rTUda607&sp_csd=d2lkZ2V0TmFtZT1zcF9waG9uZV9zZWFyY2hfdGhlbWF0aWM&psc=1" target="_blank" rel="noopener noreferrer" class="w-full md:w-1/3">
+                                        <img src="https://picsum.photos/seed/adstream/300/200" alt="Streaming Partner Advertisement" class="w-full h-auto rounded-lg object-cover">
+                                    </a>
+                                    <div class="w-full md:w-2/3">
+                                        <h4 class="text-secondary font-semibold">LIMITED TIME OFFER</h4>
+                                        <h3 class="text-xl font-bold mt-1">Premium Movie Subscription</h3>
+                                        <p class="text-gray-300 mt-2">Get access to 1000+ movies on demand with zero ads. Special 50% discount for new users - offer ends soon!</p>
+                                        <a href="https://www.amazon.com/HyperX-Cloud-III-Multi-Platform-Detachable/dp/B0F6NZWPTC/ref=sxin_31_pa_sp_phone_search_thematic_sspa?content-id=amzn1.sym.d3032ef7-ff4e-4993-b4cb-842557e70d93%3Aamzn1.sym.d3032ef7-ff4e-4993-b4cb-842557e70d93&crid=S44OBVHI3MU2&cv_ct_cx=headset&keywords=headset&pd_rd_i=B0F6NZWPTC&pd_rd_r=6e4fe4fc-1df7-4301-b57b-0939e1758271&pd_rd_w=MnPop&pd_rd_wg=89KbL&pf_rd_p=d3032ef7-ff4e-4993-b4cb-842557e70d93&pf_rd_r=FSGT8CHW136H223G1WTT&qid=1772562352&sprefix=headset%2Caps%2C343&sr=1-1-2c727eeb-987f-452f-86bd-c2978cc9d8b9-spons&aref=l3rTUda607&sp_csd=d2lkZ2V0TmFtZT1zcF9waG9uZV9zZWFyY2hfdGhlbWF0aWM&psc=1" target="_blank" rel="noopener noreferrer" class="inline-block mt-3 text-secondary font-medium hover:underline">
+                                            Learn More <i class="fa fa-arrow-right ml-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar with Ads & Upcoming Streams -->
+                        <div class="space-y-6">
+                            <!-- Sidebar Ad 1 -->
+                            <div class="bg-dark/50 border border-gray-800 rounded-xl p-3 ad-hover">
+                                <h3 class="text-xs text-gray-400 font-medium mb-2 text-center">ADVERTISEMENT</h3>
+                                <a href="https://www.amazon.com/HyperX-Cloud-III-Multi-Platform-Detachable/dp/B0F6NZWPTC/ref=sxin_31_pa_sp_phone_search_thematic_sspa?content-id=amzn1.sym.d3032ef7-ff4e-4993-b4cb-842557e70d93%3Aamzn1.sym.d3032ef7-ff4e-4993-b4cb-842557e70d93&crid=S44OBVHI3MU2&cv_ct_cx=headset&keywords=headset&pd_rd_i=B0F6NZWPTC&pd_rd_r=6e4fe4fc-1df7-4301-b57b-0939e1758271&pd_rd_w=MnPop&pd_rd_wg=89KbL&pf_rd_p=d3032ef7-ff4e-4993-b4cb-842557e70d93&pf_rd_r=FSGT8CHW136H223G1WTT&qid=1772562352&sprefix=headset%2Caps%2C343&sr=1-1-2c727eeb-987f-452f-86bd-c2978cc9d8b9-spons&aref=l3rTUda607&sp_csd=d2lkZ2V0TmFtZT1zcF9waG9uZV9zZWFyY2hfdGhlbWF0aWM&psc=1" target="_blank" rel="noopener noreferrer" class="block">
+                                    <img src="https://picsum.photos/seed/adside1/350/250" alt="Electronics Product Ad" class="w-full h-auto rounded-lg object-cover">
+                                    <p class="mt-2 text-center text-sm text-gray-300">Shop Now - Free Shipping!</p>
+                                </a>
+                            </div>
+
+                            <!-- Upcoming Streams -->
+                            <div class="bg-dark/50 border border-gray-800 rounded-xl p-4">
+                                <h3 class="text-xl font-bold mb-4 flex items-center">
+                                    <i class="fa fa-clock-o text-secondary mr-2"></i> Upcoming Streams
+                                </h3>
+                                <div class="space-y-4">
+                                    <div class="border border-gray-700 rounded-lg p-3 card-hover">
+                                        <div class="flex space-x-3">
+                                            <div class="w-1/3 bg-gray-800 rounded overflow-hidden">
+                                                <img src="https://picsum.photos/seed/movie1/150/100" alt="Ocean's Secret" class="w-full h-auto">
+                                            </div>
+                                            <div class="w-2/3">
+                                                <h4 class="font-semibold">Ocean's Secret</h4>
+                                                <p class="text-gray-400 text-sm">Adventure | Mystery</p>
+                                                <p class="text-secondary text-sm mt-1">Starts in 45 mins</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="border border-gray-700 rounded-lg p-3 card-hover">
+                                        <div class="flex space-x-3">
+                                            <div class="w-1/3 bg-gray-800 rounded overflow-hidden">
+                                                <img src="https://picsum.photos/seed/movie2/150/100" alt="Starfall Legacy" class="w-full h-auto">
+                                            </div>
+                                            <div class="w-2/3">
+                                                <h4 class="font-semibold">Starfall Legacy</h4>
+                                                <p class="text-gray-400 text-sm">Sci-Fi | Action</p>
+                                                <p class="text-secondary text-sm mt-1">Starts at 9:00 PM UTC</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sidebar Ad 2 -->
+                            <div class="bg-dark/50 border border-gray-800 rounded-xl p-3 ad-hover">
+                                <h3 class="text-xs text-gray-400 font-medium mb-2 text-center">SPONSORED CONTENT</h3>
+                                <a href="https://www.effectivegatecpm.com/xa2czpzj?key=2f6b2d68cfd2c71e6f65a12e02c4485f" target="_blank" rel="noopener noreferrer" class="block">
+                                    <img src="https://picsum.photos/seed/adside2/350/300" alt="Fashion Collection Ad" class="w-full h-auto rounded-lg object-cover">
+                                    <p class="mt-2 text-center text-sm text-gray-300">New Collection - 30% Off!</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Banner Ad -->
+                    <div class="mt-8 bg-dark/50 border border-gray-800 rounded-xl p-4 ad-hover">
+                        <h3 class="text-sm text-gray-400 font-medium mb-3 text-center">FEATURED PARTNER ADVERTISEMENT</h3>
+                        <a href="https://www.effectivegatecpm.com/xa2czpzj?key=2f6b2d68cfd2c71e6f65a12e02c4485f" target="_blank" rel="noopener noreferrer" class="block">
+                            <img src="https://picsum.photos/seed/adbanner/1200/150" alt="Home Appliances Banner Ad" class="w-full h-auto rounded-lg object-cover">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Schedule Tab -->
+        <section id="schedule" class="tab-content py-8 md:py-12">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold mb-6 text-center">Live Stream Schedule</h2>
+<p class="text-gray-300 text-lg max-w-3xl mx-auto text-center mb-8">
+    Below is our weekly streaming schedule - all times are in UTC. Streams start on time and run until the movie ends. Don't forget to set reminders!
+</p>
+
+<!-- Schedule Table -->
+<div class="overflow-x-auto mb-8">
+    <table class="w-full border-collapse bg-dark/50 border border-gray-800 rounded-xl">
+        <thead>
+            <tr class="bg-primary/20">
+                <th class="p-4 text-left border-b border-gray-700">Day</th>
+                <th class="p-4 text-left border-b border-gray-700">Time (UTC)</th>
+                <th class="p-4 text-left border-b border-gray-700">Movie Title</th>
+                <th class="p-4 text-left border-b border-gray-700">Genre</th>
+                <th class="p-4 text-left border-b border-gray-700">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="border-b border-gray-800 hover:bg-primary/10 transition-colors">
+                <td class="p-4">Monday</td>
+                <td class="p-4">10:00 AM / 8:00 PM</td>
+                <td class="p-4">The Last Warrior</td>
+                <td class="p-4">Action / Adventure</td>
+                <td class="p-4"><span class="text-green-500">Scheduled</span></td>
+            </tr>
+            <tr class="border-b border-gray-800 hover:bg-primary/10 transition-colors">
+                <td class="p-4">Tuesday</td>
+                <td class="p-4">11:00 AM / 9:00 PM</td>
+                <td class="p-4">The Midnight Chronicles</td>
+                <td class="p-4">Action / Fantasy</td>
+                <td class="p-4"><span class="text-secondary">Live Now</span></td>
+            </tr>
+            <tr class="border-b border-gray-800 hover:bg-primary/10 transition-colors">
+                <td class="p-4">Wednesday</td>
+                <td class="p-4">10:00 AM / 8:00 PM</td>
+                <td class="p-4">Ocean's Secret</td>
+                <td class="p-4">Adventure / Mystery</td>
+                <td class="p-4"><span class="text-green-500">Scheduled</span></td>
+            </tr>
+            <tr class="border-b border-gray-800 hover:bg-primary/10 transition-colors">
+                <td class="p-4">Thursday</td>
+                <td class="p-4">11:00 AM / 9:00 PM</td>
+                <td class="p-4">Starfall Legacy</td>
+                <td class="p-4">Sci-Fi / Action</td>
+                <td class="p-4"><span class="text-green-500">Scheduled</span></td>
+            </tr>
+            <tr class="hover:bg-primary/10 transition-colors">
+                <td class="p-4">Friday - Sunday</td>
+                <td class="p-4">9:00 AM - 11:00 PM</td>
+                <td class="p-4">Weekend Marathon</td>
+                <td class="p-4">Mixed Genres</td>
+                <td class="p-4"><span class="text-green-500">Scheduled</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Schedule Ad -->
+<div class="bg-dark/50 border border-gray-800 rounded-xl p-4 ad-hover">
+    <h3 class="text-sm text-gray-400 font-medium mb-2 text-center">SPONSORED</h3>
+    <a href="https://www.amazon.com/HyperX-Cloud-III-Multi-Platform-Detachable/dp/B0F6NZWPTC/ref=sxin_31_pa_sp_phone_search_thematic_sspa?content-id=amzn1.sym.d3032ef7-ff4e-4993-b4cb-842557e70d93%3Aamzn1.sym.d3032ef7-ff4e-4993-b4cb-842557e70d93&crid=S44OBVHI3MU2&cv_ct_cx=headset&keywords=headset&pd_rd_i=B0F6NZWPTC&pd_rd_r=6e4fe4fc-1df7-4301-b57b-0939e1758271&pd_rd_w=MnPop&pd_rd_wg=89KbL&pf_rd_p=d3032ef7-ff4e-4993-b4cb-842557e70d93&pf_rd_r=FSGT8CHW136H223G1WTT&qid=1772562352&sprefix=headset%2Caps%2C343&sr=1-1-2c727eeb-987f-452f-86bd-c2978cc9d8b9-spons&aref=l3rTUda607&sp_csd=d2lkZ2V0TmFtZT1zcF9waG9uZV9zZWFyY2hfdGhlbWF0aWM&psc=1" target="_blank" rel="noopener noreferrer" class="block">
+        <img src="https://picsum.photos/seed/schedulead/1200/200" alt="Movie Ticket Service Ad" class="w-full h-auto rounded-lg object-cover">
+        <p class="mt-2 text-center text-sm text-gray-300">Book movie tickets online - Get 20% cashback!</p>
+    </a>
+</div>
+</div>
+</section>
+
+<!-- Genres Tab -->
+<section id="genres" class="tab-content py-8 md:py-12">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-6 text-center">Movie Genres We Stream</h2>
+        <p class="text-gray-300 text-lg max-w-3xl mx-auto text-center mb-8">
+            Explore our curated genres - we stream handpicked movies from each category every week. Find your favorite and never miss a stream!
+        </p>
+
+        <!-- Genres Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="bg-dark/50 border border-gray-800 rounded-xl p-6 card-hover">
+                <div class="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mb-4">
+                    <i class="fa fa-fighter-jet text-secondary text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Action</h3>
+                <p class="text-gray-300">High-octane thrillers, war films, and martial arts epics - streamed every Tuesday and Thursday.</p>
+                <p class="mt-3 text-secondary font-medium">Next Stream: 9:00 PM UTC</p>
+            </div>
+
+            <div class="bg-dark/50 border border-gray-800 rounded-xl p-6 card-hover">
+                <div class="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mb-4">
+                    <i class="fa fa-magic text-secondary text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Fantasy & Sci-Fi</h3>
+                <p class="text-gray-300">Intergalactic adventures, magical worlds, and futuristic tales - streamed every Wednesday and Friday.</p>
+                <p class="mt-3 text-secondary font-medium">Next Stream: 8:00 PM UTC</p>
+            </div>
+
+            <div class="bg-dark/50 border border-gray-800 rounded-xl p-6 card-hover">
+                <div class="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mb-4">
+                    <i class="fa fa-heart text-secondary text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Romance & Drama</h3>
+                <p class="text-gray-300">Heartwarming stories, emotional journeys, and classic love tales - streamed every Monday and Sunday.</p>
+                <p class="mt-3 text-secondary font-medium">Next Stream: 10:00 AM UTC</p>
+            </div>
+
+            <div class="bg-dark/50 border border-gray-800 rounded-xl p-6 card-hover">
+                <div class="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mb-4">
+                    <i class="fa fa-ghost text-secondary text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Horror & Thriller</h3>
+                <p class="text-gray-300">Chilling mysteries, supernatural tales, and psychological thrillers - streamed every Saturday night.</p>
+                <p class="mt-3 text-secondary font-medium">Next Stream: 10:00 PM UTC</p>
+            </div>
+
+            <div class="bg-dark/50 border border-gray-800 rounded-xl p-6 card-hover">
+                <div class="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mb-4">
+                    <i class="fa fa-smile-o text-secondary text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Comedy</h3>
+                <p class="text-gray-300">Slapstick, romantic comedies, and witty satires - streamed every weekend afternoon.</p>
+                <p class="mt-3 text-secondary font-medium">Next Stream: 2:00 PM UTC</p>
+            </div>
+
+            <div class="bg-dark/50 border border-gray-800 rounded-xl p-6 card-hover">
+                <div class="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mb-4">
+                    <i class="fa fa-book text-secondary text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Documentary</h3>
+                <p class="text-gray-300">True stories, nature docs, and historical films - streamed every weekday morning.</p>
+                <p class="mt-3 text-secondary font-medium">Next Stream: 10:00 AM UTC</p>
             </div>
         </div>
 
-        <!-- === SECTION STREAMING VIDEO + IKLAN PRE-ROLL === -->
-        <section class="stream-section container" id="stream">
-            <div class="stream-container">
-                <!-- IKLAN PRE-ROLL SEBELUM VIDEO -->
-                <div class="pre-roll-ad" id="preRollAd">
-                    <div class="ad-content">
-                        <h3>Iklan Sebelum Video</h3>
-                        <img src="https://picsum.photos/id/42/800/450" alt="Iklan Pre-Roll">
-                        <p>Tonton iklan selama <span id="adCountdown">5</span> detik atau klik <button id="skipPreRoll">Skip Iklan</button></p>
-                    </div>
-                </div>
+        <!-- Genres Ad -->
+        <div class="bg-dark/50 border border-gray-800 rounded-xl p-4 ad-hover">
+            <h3 class="text-sm text-gray-400 font-medium mb-2 text-center">ADVERTISEMENT</h3>
+            <a href="https://www.amazon.com/HyperX-Cloud-III-Multi-Platform-Detachable/dp/B0F6NZWPTC/ref=sxin_31_pa_sp_phone_search_thematic_sspa?content-id=amzn1.sym.d3032ef7-ff4e-4993-b4cb-842557e70d93%3Aamzn1.sym.d3032ef7-ff4e-4993-b4cb-842557e70d93&crid=S44OBVHI3MU2&cv_ct_cx=headset&keywords=headset&pd_rd_i=B0F6NZWPTC&pd_rd_r=6e4fe4fc-1df7-4301-b57b-0939e1758271&pd_rd_w=MnPop&pd_rd_wg=89KbL&pf_rd_p=d3032ef7-ff4e-4993-b4cb-842557e70d93&pf_rd_r=FSGT8CHW136H223G1WTT&qid=1772562352&sprefix=headset%2Caps%2C343&sr=1-1-2c727eeb-987f-452f-86bd-c2978cc9d8b9-spons&aref=l3rTUda607&sp_csd=d2lkZ2V0TmFtZT1zcF9waG9uZV9zZWFyY2hfdGhlbWF0aWM&psc=1" target="_blank" rel="noopener noreferrer" class="block">
+                <img src="https://picsum.photos/seed/genresad/1200/200" alt="Streaming Device Ad" class="w-full h-auto rounded-lg object-cover">
+                <p class="mt-2 text-center text-sm text-gray-300">Upgrade your streaming setup - Special discounts available!</p>
+            </a>
+        </div>
+    </div>
+</section>
 
-                <!-- PEMUTAR YOUTUBE EMBED -->
-                <div class="video-player">
-                    <iframe 
-                        id="youtubePlayer"
-                        width="100%" 
-                        height="auto" 
-                        src="https://www.youtube.com/embed/jQ-VgNAziHQ?enablejsapi=1&rel=0" 
-                        title="Video Film" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
+<!-- About Us Tab -->
+<section id="about" class="tab-content py-8 md:py-12">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-6 text-center">About CinemaStream</h2>
+        <div class="flex flex-col md:flex-row gap-8 items-center mb-8">
+            <div class="w-full md:w-1/3">
+                <img src="https://picsum.photos/seed/aboutus/500/500" alt="CinemaStream Team" class="w-full h-auto rounded-xl object-cover border border-gray-800">
+            </div>
+            <div class="w-full md:w-2/3">
+                <p class="text-gray-300 text-lg mb-4">
+                    CinemaStream was founded in 2020 with a simple mission: to bring high-quality movie streaming to audiences worldwide, completely free of charge, via YouTube Live.
+                </p>
+                <p class="text-gray-300 text-lg mb-4">
+                    We partner with major studios and independent filmmakers to legally stream movies with proper licensing. Our team works around the clock to curate the best content and ensure smooth, uninterrupted streams.
+                </p>
+                <p class="text-gray-300 text-lg">
+                    To keep our service free, we run carefully selected advertisements that help support content licensing and platform maintenance. We're committed to providing a safe, enjoyable viewing experience for all movie lovers.
+                </p>
+            </div>
+        </div>
 
-                <!-- INFORMASI FILM -->
-                <div class="film-info">
-                    <h2>Spider-Man: Far From Home</h2>
-                    <div class="meta-info">
-                        <span><i class="fas fa-calendar"></i> Rilis: 2019</span>
-                        <span><i class="fas fa-star"></i> Rating: 7.5/10</span>
-                        <span><i class="fas fa-clock"></i> Durasi: 2j 9m</span>
-                    </div>
-                    <p>Peter Parker kembali sebagai Spider-Man yang harus menghadapi ancaman baru di luar bumi dengan bantuan Nick Fury dan MJ.</p>
+        <!-- Our Values -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-dark/50 border border-gray-800 rounded-xl p-6 text-center">
+                <i class="fa fa-check-circle text-secondary text-3xl mb-3"></i>
+                <h3 class="text-xl font-bold mb-2">Legal & Licensed</h3>
+                <p class="text-gray-300">All content is properly licensed to ensure creators get fair compensation.</p>
+            </div>
+            <div class="bg-dark/50 border border-gray-800 rounded-xl p-6 text-center">
+                <i class="fa fa-globe text-secondary text-3xl mb-3"></i>
+                <h3 class="text-xl font-bold mb-2">Global Access</h3>
+                <p class="text-gray-300">Stream from anywhere in the world - no regional restrictions.</p>
+            </div>
+            <div class="bg-dark/50 border border-gray-800 rounded-xl p-6 text-center">
+                <i class="fa fa-users text-secondary text-3xl mb-3"></i>
+                <h3 class="text-xl font-bold mb-2">Community Focused</h3>
+                <p class="text-gray-300">We take feedback from our viewers to shape our content schedule.</p>
+            </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="bg-dark/50 border border-gray-800 rounded-xl p-6 mb-8">
+            <h3 class="text-xl font-bold mb-4 text-center">Get In Touch</h3>
+            <div class="flex flex-col md:flex-row justify-center gap-6 text-center">
+                <div>
+                    <i class="fa fa-envelope text-secondary text-xl mb-2"></i>
+                    <p class="text-gray-300">contact@cinemastream.com</p>
+                </div>
+                <div>
+                    <i class="fa fa-map-marker text-secondary text-xl mb-2"></i>
+                    <p class="text-gray-300">Depok, West Java, Indonesia</p>
+                </div>
+                <div>
+                    <i class="fa fa-phone text-secondary text-xl mb-2"></i>
+                    <p class="text-gray-300">+62 812-XXXX-XXXX</p>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- === SECTION KOMENTAR OTOMATIS === -->
-        <section class="comment-section container" id="comment">
-            <h2><i class="fas fa-comments"></i> Komentar Pengguna (1.5K+)</h2>
-            <div class="comment-count">Total Komentar: <span id="totalComment">1.527</span>+</div>
-            
-            <!-- FORM INPUT KOMENTAR PENGGUNA -->
-            <div class="comment-input">
-                <img src="https://picsum.photos/id/64/50/50" alt="Avatar Pengguna" class="user-avatar">
-                <textarea placeholder="Tulis komentarmu disini..."></textarea>
-                <button>Kirim</button>
+        <!-- About Us Ad -->
+        <div class="bg-dark/50 border border-gray-800 rounded-xl p-4 ad-hover">
+            <h3 class="text-sm text-gray-400 font-medium mb-2 text-center">SPONSORED PARTNER</h3>
+            <a href="https://www.amazon.com/HyperX-Cloud-III-Multi-Platform-Detachable/dp/B0F6NZWPTC/ref=sxin_31_pa_sp_phone_search_thematic_sspa?content-id=amzn1.sym.d3032ef7-ff4e-4993-b4cb-842557e70d93%3Aamzn1.sym.d3032ef7-ff4e-4993-b4cb-842557e70d93&crid=S44OBVHI3MU2&cv_ct_cx=headset&keywords=headset&pd_rd_i=B0F6NZWPTC&pd_rd_r=6e4fe4fc-1df7-4301-b57b-0939e1758271&pd_rd_w=MnPop&pd_rd_wg=89KbL&pf_rd_p=d3032ef7-ff4e-4993-b4cb-842557e70d93&pf_rd_r=FSGT8CHW136H223G1WTT&qid=1772562352&sprefix=headset%2Caps%2C343&sr=1-1-2c727eeb-987f-452f-86bd-c2978cc9d8b9-spons&aref=l3rTUda607&sp_csd=d2lkZ2V0TmFtZT1zcF9waG9uZV9zZWFyY2hfdGhlbWF0aWM&psc=1" target="_blank" rel="noopener noreferrer" class="block">
+                <img src="https://picsum.photos/seed/aboutad/1200/200" alt="Movie Merchandise Ad" class="w-full h-auto rounded-lg object-cover">
+                <p class="mt-2 text-center text-sm text-gray-300">Shop official movie merchandise - 15% of sales support filmmakers!</p>
+            </a>
+        </div>
+    </div>
+</section>
+</main>
+
+<!-- Footer -->
+<footer class="bg-primary/90 py-8 mt-12">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                <i class="fa fa-film text-secondary text-2xl"></i>
+                <h2 class="text-xl font-bold">Cinema<span class="text-secondary">Stream</span></h2>
             </div>
-
-            <!-- KOTAK KOMENTAR OTOMATIS -->
-            <div class="comments-container" id="commentsContainer">
-                <!-- KOMENTAR AWAL -->
-                <div class="comment-box">
-                    <img src="https://picsum.photos/id/23/50/50" alt="Avatar" class="comment-avatar">
-                    <div class="comment-content">
-                        <div class="comment-username">Andi Wijaya</div>
-                        <p class="comment-text">Film ini luar biasa! Adegan aksi nya bikin merinding.</p>
-                        <div class="comment-time">5 menit yang lalu</div>
-                    </div>
-                </div>
-
-                <div class="comment-box">
-                    <img src="https://picsum.photos/id/91/50/50" alt="Avatar" class="comment-avatar">
-                    <div class="comment-content">
-                        <div class="comment-username">Miya Kusuma</div>
-                        <p class="comment-text">Kualitas gambarnya sangat jernih, kayak nonton di bioskop aja.</p>
-                        <div class="comment-time">3 menit yang lalu</div>
-                    </div>
-                </div>
+            <div class="flex space-x-6 mb-4 md:mb-0">
+                <a href="#" class="text-gray-300 hover:text-secondary transition-colors">
+                    <i class="fa fa-facebook-square text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-secondary transition-colors">
+                    <i class="fa fa-twitter-square text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-secondary transition-colors">
+                    <i class="fa fa-instagram text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-secondary transition-colors">
+                    <i class="fa fa-youtube-play text-xl"></i>
+                </a>
             </div>
-        </section>
-
-        <!-- === FOOTER === -->
-        <footer>
-            <div class="container footer-content">
-                <div class="footer-section">
-                    <h3>CineStream</h3>
-                    <p>Website streaming film legal dengan konten dari YouTube resmi.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-section">
-                    <h3>Menu</h3>
-                    <ul>
-                        <li><a href="#stream">Streaming</a></li>
-                        <li><a href="#movie">Koleksi Film</a></li>
-                        <li><a href="#comment">Komentar</a></li>
-                        <li><a href="#about">Tentang Kami</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h3>Kontak</h3>
-                    <p>Email: support@cinestream.id</p>
-                    <p>Alamat: Jakarta, Indonesia</p>
-                </div>
+            <div class="text-gray-400 text-sm text-center md:text-right">
+                <p>&copy; 2026 CinemaStream. All rights reserved.</p>
+                <p class="mt-1">Content streamed via YouTube - All movies have proper licensing.</p>
             </div>
-            <div class="copyright">
-                &copy; 2026 CineStream - Semua konten dari YouTube Resmi
-            </div>
-        </footer>
+        </div>
+    </div>
+</footer>
 
-        <!-- === SCRIPT KONTROL === -->
-        <script>
-            // Kontrol Iklan Pre-Roll
-            const preRollAd = document.getElementById('preRollAd');
-            const skipPreRoll = document.getElementById('skipPreRoll');
-            const adCountdown = document.getElementById('adCountdown');
-            
-            let countdown = 5;
-            const countdownInterval = setInterval(() => {
-                countdown--;
-                adCountdown.textContent = countdown;
-                if (countdown <= 0) {
-                    clearInterval(countdownInterval);
-                    preRollAd.style.display = 'none';
-                }
-            }, 1000);
+<!-- Mobile Menu (Hidden by Default) -->
+<div class="fixed inset-0 bg-black/90 z-50 hidden flex-col items-center justify-center" id="mobileMenu">
+    <button class="absolute top-4 right-4 text-2xl text-white" id="closeMenu">
+        <i class="fa fa-times"></i>
+    </button>
+    <nav class="flex flex-col items-center space-y-6 text-xl">
+        <a href="#" class="tab-link font-medium hover:text-secondary transition-colors" data-tab="home">Home</a>
+        <a href="#" class="tab-link font-medium hover:text-secondary transition-colors" data-tab="schedule">Live Schedule</a>
+        <a href="#" class="tab-link font-medium hover:text-secondary transition-colors" data-tab="genres">Genres</a>
+        <a href="#" class="tab-link font-medium hover:text-secondary transition-colors" data-tab="about">About Us</a>
+        <button class="subscribe-btn bg-secondary hover:bg-secondary/90 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+            Subscribe
+        </button>
+    </nav>
+</div>
 
-            skipPreRoll.addEventListener('click', () => {
-                preRollAd.style.display = 'none';
-            });
+<!-- All Functional JavaScript -->
+<script>
+// Tab Content Switching
+const tabLinks = document.querySelectorAll('.tab-link');
+const tabContents = document.querySelectorAll('.tab-content');
 
-            // Kontrol Iklan Popunder
-            const popunderAd = document.getElementById('popunderAd');
-            const closePopunder = document.getElementById('closePopunder');
-            
-            setTimeout(() => {
-                popunderAd.style.display = 'block';
-            }, 7000);
+tabLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Remove active class from all links and contents
+        tabLinks.forEach(l => l.classList.remove('text-secondary'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked link and corresponding content
+        link.classList.add('text-secondary');
+        const targetTab = link.getAttribute('data-tab');
+        document.getElementById(targetTab).classList.add('active');
+        
+        // Close mobile menu after tab selection
+        mobileMenu.classList.add('hidden');
+    });
+});
 
-            closePopunder.addEventListener('click', () => {
-                popunderAd.style.display = 'none';
-            });
+// Mobile Menu Toggle
+const openMenuBtn = document.getElementById('openMenu');
+const closeMenuBtn = document.getElementById('closeMenu');
+const mobileMenu = document.getElementById('mobileMenu');
 
-            // === SISTEM KOMENTAR OTOMATIS ===
-            const namaDepan = ["Andi", "Miya", "Budi", "Siti", "Rizky", "Luna", "Eko", "Dewi", "Fajar", "Nina",
-                               "Gilang", "Putri", "Hendra", "Ayu", "Joko", "Lia", "Krisna", "Rina", "Bagus", "Citra"];
-            const namaBelakang = ["Wijaya", "Kusuma", "Santoso", "Sari", "Pratama", "Putri", "Susanto", "Lestari"];
+openMenuBtn.addEventListener('click', () => {
+    mobileMenu.classList.remove('hidden');
+});
 
-            const templateKomentar = [
-                "Film ini luar biasa! Adegan [bagian] nya bikin merinding.",
-                "Suka banget sama akting [aktor] disini, sangat natural!",
-                "Kualitas gambarnya sangat jernih, kayak nonton di bioskop aja.",
-                "Alur cerita nya tidak terlalu cepat, pas banget buat ngerti setiap detail.",
-                "OST-nya juga enak banget, bikin suasana jadi lebih seru!"
-            ];
+closeMenuBtn.addEventListener('click', () => {
+    mobileMenu.classList.add('hidden');
+});
 
-            const bagianFilm = ["aksi", "drama", "komedi", "fantasi"];
-            const namaAktor = ["Tom Holland", "Zendaya", "Jake Gyllenhaal"];
+// Close mobile menu when clicking outside
+mobileMenu.addEventListener('click', (e) => {
+    if (e.target === mobileMenu) {
+        mobileMenu.classList.add('hidden');
+    }
+});
 
-            // Fungsi buat nama acak
-            function buatNamaAcak() {
-                const depan = namaDepan[Math.floor(Math.random() * namaDepan.length)];
-                const belakang = namaBelakang[Math.floor(Math.random() * namaBelakang.length)];
-                return `${depan} ${belakang}`;
-            }
+// Subscribe Notification Functionality
+const subscribeBtns = document.querySelectorAll('.subscribe-btn');
+const subscribeNotification = document.getElementById('subscribeNotification');
+const notificationOverlay = document.getElementById('notificationOverlay');
+const confirmSubscribe = document.getElementById('confirmSubscribe');
+const cancelSubscribe = document.getElementById('cancelSubscribe');
 
-            // Fungsi buat komentar acak
-            function buatKomentarAcak() {
-                let komentar = templateKomentar[Math.floor(Math.random() * templateKomentar.length)];
-                komentar = komentar.replace("[bagian]", bagianFilm[Math.floor(Math.random() * bagianFilm.length)]);
-                komentar = komentar.replace("[aktor]", namaAktor[Math.floor(Math.random() * namaAktor.length)]);
-                return komentar;
-            }
+subscribeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        subscribeNotification.style.display = 'block';
+        notificationOverlay.style.display = 'block';
+    });
+});
 
-            // Tambah komentar otomatis setiap 3 detik
-            const commentsContainer = document.getElementById('commentsContainer');
-            setInterval(() => {
-                const nama = buatNamaAcak();
-                const komentar = buatKomentarAcak();
-                
-                const commentBox = document.createElement('div');
-                commentBox.className = 'comment-box';
-                commentBox.innerHTML = `
-                    <img src="https://picsum.photos/id/${Math.floor(Math.random() * 100)}/50/50" alt="Avatar" class="comment-avatar">
-                    <div class="comment-content">
-                        <div class="comment-username">${nama}</div>
-                        <p class="comment-text">${komentar}</p>
-                        <div class="comment-time">${Math.floor(Math.random() * 10)} menit yang lalu</div>
-                    </div>
-                `;
+confirmSubscribe.addEventListener('click', () => {
+    subscribeBtns.forEach(btn => {
+        btn.textContent = 'Subscribed';
+        btn.classList.remove('bg-secondary', 'hover:bg-secondary/90');
+        btn.classList.add('bg-gray-700', 'cursor-not-allowed');
+        btn.disabled = true;
+    });
+    subscribeNotification.style.display = 'none';
+    notificationOverlay.style.display = 'none';
+});
 
-                commentsContainer.appendChild(commentBox);
-                // Gulir ke bawah otomatis
-                commentsContainer.scrollTop = commentsContainer.scrollHeight;
+cancelSubscribe.addEventListener('click', () => {
+    subscribeNotification.style.display = 'none';
+    notificationOverlay.style.display = 'none';
+});
 
-                // Hapus komentar lama jika terlalu banyak
-                if (commentsContainer.children.length > 50) {
-                    commentsContainer.removeChild(commentsContainer.children[0]);
-                }
-            }, 3000);
+let player;
 
-            // Kontrol Mobile Menu
-            const menuToggle = document.getElementById('menuToggle');
-            const navMenu = document.querySelector('.nav-menu');
-            
-            menuToggle.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-            });
-        </script>
-    </body>
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player');
+}
+
+document.addEventListener("click", function() {
+  if (player) {
+    player.unMute();
+  }
+}, { once: true });
+
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
+</body>
 </html>
