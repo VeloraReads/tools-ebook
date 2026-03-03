@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineStream - Streaming Film Legal via YouTube</title>
+    <title>CineStream - Streaming Film Legal dengan Komentar Otomatis</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* Reset & Base Style */
+        /* === RESET & BASE STYLE === */
         * {
             margin: 0;
             padding: 0;
@@ -21,19 +21,13 @@
             line-height: 1.6;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.3s ease;
-        }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 20px;
         }
 
-        /* === IKLAN SECTION === */
+        /* === IKLAN SECTION STYLE === */
         .ad-top {
             background-color: #1e293b;
             padding: 12px 0;
@@ -53,6 +47,7 @@
             justify-content: center;
             color: #3b82f6;
             font-weight: 600;
+            text-decoration: none;
             border: 1px dashed #475569;
         }
 
@@ -77,6 +72,7 @@
             justify-content: center;
             color: #3b82f6;
             font-weight: 600;
+            text-decoration: none;
         }
 
         .ad-sidebar {
@@ -84,8 +80,8 @@
             padding: 15px;
             border-radius: 10px;
             text-align: center;
-            margin-bottom: 25px;
             border: 1px dashed #475569;
+            margin-bottom: 25px;
         }
 
         .ad-sidebar a {
@@ -94,14 +90,15 @@
             height: 250px;
             background-color: #2d3748;
             border-radius: 6px;
-            margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 10px;
         }
 
-        #popunder-ad {
+        .popunder-ad {
             display: none;
             position: fixed;
             bottom: 20px;
@@ -115,7 +112,7 @@
             z-index: 9999;
         }
 
-        #popunder-ad.active {
+        .popunder-ad.active {
             display: block;
             animation: fadeIn 0.5s ease forwards;
         }
@@ -126,14 +123,14 @@
         }
 
         .close-popunder {
-            position: absolute;
-            top: 15px;
-            right: 15px;
             background: none;
             border: none;
             color: #94a3b8;
             font-size: 1.2rem;
             cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 15px;
         }
 
         .popunder-content h4 {
@@ -152,9 +149,10 @@
             align-items: center;
             justify-content: center;
             color: #3b82f6;
+            text-decoration: none;
         }
 
-        /* === HEADER === */
+        /* === HEADER STYLE === */
         header {
             background-color: #1e293b;
             padding: 15px 0;
@@ -168,6 +166,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
         }
 
         .logo {
@@ -186,6 +185,7 @@
             width: 100%;
             max-width: 400px;
             position: relative;
+            margin: 10px 0;
         }
 
         .search-box input {
@@ -215,8 +215,15 @@
             font-weight: 500;
         }
 
-        .nav-menu a:hover {
-            color: #3b82f6;
+        .nav-menu a {
+            color: #f1f5f9;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-menu a i {
+            margin-right: 8px;
         }
 
         .menu-toggle {
@@ -229,6 +236,11 @@
             background-color: #1e293b;
             padding: 15px 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: absolute;
+            top: 100%;
+            right: 20px;
+            border-radius: 10px;
+            z-index: 999;
         }
 
         .mobile-menu.active {
@@ -238,22 +250,22 @@
         .mobile-menu a {
             display: block;
             padding: 10px 0;
-            border-bottom: 1px solid #2d3748;
+            color: #f1f5f9;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
         }
 
-        .mobile-menu a:last-child {
-            border-bottom: none;
+        .mobile-menu a i {
+            margin-right: 8px;
         }
 
-        /* === STREAMING SECTION === */
+        /* === STREAMING SECTION STYLE === */
         .stream-section {
             margin: 30px 0;
-            display: grid;
-            grid-template-columns: 4fr 1fr;
-            gap: 30px;
         }
 
-        .stream-player {
+        .stream-container {
             background-color: #1e293b;
             border-radius: 10px;
             padding: 15px;
@@ -262,15 +274,15 @@
 
         .player-title {
             font-size: 1.5rem;
-            margin-bottom: 15px;
             color: #3b82f6;
+            margin-bottom: 15px;
         }
 
         .youtube-player {
             position: relative;
             width: 100%;
             height: 0;
-            padding-bottom: 56.25%;
+            padding-bottom: 56.25%; /* Rasio 16:9 */
             overflow: hidden;
             border-radius: 8px;
             margin-bottom: 15px;
@@ -299,7 +311,7 @@
             line-height: 1.7;
         }
 
-        /* === COMMENT SECTION === */
+        /* === KOMENTAR SECTION STYLE === */
         .comment-section {
             background-color: #1e293b;
             border-radius: 10px;
@@ -310,8 +322,8 @@
 
         .comment-title {
             font-size: 1.4rem;
-            margin-bottom: 20px;
             color: #3b82f6;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
         }
@@ -330,6 +342,7 @@
             display: flex;
             gap: 10px;
             margin-bottom: 30px;
+            align-items: center;
         }
 
         .comment-input img {
@@ -352,11 +365,11 @@
         }
 
         .comment-input button {
-            padding: 0 20px;
+            padding: 10px 25px;
             border-radius: 20px;
             border: none;
             background-color: #3b82f6;
-            color: white;
+            color: #fff;
             font-weight: 600;
             cursor: pointer;
         }
@@ -366,12 +379,12 @@
         }
 
         .comments-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
             max-height: 600px;
             overflow-y: auto;
             padding-right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .comments-container::-webkit-scrollbar {
@@ -431,7 +444,7 @@
             color: #94a3b8;
         }
 
-        /* === FOOTER === */
+        /* === FOOTER STYLE === */
         footer {
             background-color: #1e293b;
             padding: 30px 0;
@@ -443,17 +456,17 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
-            margin-bottom: 20px;
         }
 
         .footer-section h3 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
             color: #3b82f6;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
         }
 
         .footer-section p, .footer-section a {
             color: #94a3b8;
+            text-decoration: none;
         }
 
         .footer-section a:hover {
@@ -470,6 +483,7 @@
         .copyright {
             text-align: center;
             padding-top: 20px;
+            margin-top: 20px;
             border-top: 1px solid #2d3748;
             color: #94a3b8;
             font-size: 0.9rem;
@@ -480,346 +494,275 @@
             .nav-menu {
                 display: flex;
             }
+
             .menu-toggle {
                 display: none;
             }
+
             .mobile-menu {
                 display: none !important;
             }
         }
 
-        @media (max-width: 992px) {
-            .stream-section {
-                grid-template-columns: 1fr;
-            }
-            .sidebar {
-                display: flex;
-                gap: 20px;
-                overflow-x: auto;
-                padding-bottom: 15px;
-            }
-            .ad-sidebar {
-                min-width: 280px;
-                flex-shrink: 0;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .player-title {
-                font-size: 1.2rem;
-            }
-            .comment-input {
+        @media (max-width: 767px) {
+            .header-content {
                 flex-direction: column;
+                align-items: flex-start;
             }
-            .comment-input textarea {
-                height: 80px;
+
+            .search-box {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <!-- IKLAN TOP BANNER -->
+    <!-- === IKLAN TOP === -->
     <div class="ad-top">
-        <a href="LINK_IKLAN_ANDA" target="_blank" rel="noopener noreferrer">
-            [BANNER IKLAN 728x90 DISINI]
-        </a>
+        <a href="https://link-iklan-anda.com" target="_blank" rel="noopener noreferrer">[BANNER IKLAN 728x90 DISINI]</a>
     </div>
 
-    <!-- HEADER -->
+    <!-- === HEADER === -->
     <header>
         <div class="container header-content">
             <div class="logo">
-                <i class="fas fa-play-circle"></i> CineStream
+                <i class="fas fa-film"></i> CineStream
             </div>
             <div class="search-box">
-                <input type="text" placeholder="Cari film YouTube legal...">
+                <input type="text" placeholder="Cari film legal favoritmu...">
                 <button><i class="fas fa-search"></i></button>
             </div>
             <div class="nav-menu">
-                <a href="#home"><i class="fas fa-home"></i> Beranda</a>
-                <a href="#movies"><i class="fas fa-film"></i> Film</a>
-                <a href="#series"><i class="fas fa-tv"></i> Serial</a>
-                <a href="#about"><i class="fas fa-info-circle"></i> Tentang</a>
+                <a href="#stream"><i class="fas fa-play-circle"></i> Streaming</a>
+                <a href="#movie"><i class="fas fa-film"></i> Koleksi Film</a>
+                <a href="#comment"><i class="fas fa-comments"></i> Komentar</a>
+                <a href="#about"><i class="fas fa-info-circle">
+        </i> Tentang</a>
+                </div>
+                <div class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
             </div>
-            <div class
-        "menu-toggle" id="menuToggle">
-            <i class="fas fa-bars"></i>
-        </div>
-    </div>
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-        <a href="#home"><i class="fas fa-home"></i> Beranda</a>
-        <a href="#movies"><i class="fas fa-film"></i> Film</a>
-        <a href="#series"><i class="fas fa-tv"></i> Serial</a>
-        <a href="#about"><i class="fas fa-info-circle"></i> Tentang</a>
-    </div>
-</header>
+        </header>
 
-<!-- IKLAN MIDDLE BANNER -->
-<div class="container ad-middle">
-    <a href="LINK_IKLAN_ANDA" target="_blank" rel="noopener noreferrer">
-        [BANNER IKLAN 970x90 DISINI]
-    </a>
-</div>
-
-<!-- STREAMING SECTION -->
-<section class="container stream-section">
-    <div class="stream-player">
-        <h2 class="player-title">Spider-Man: Far From Home - Streaming Legal YouTube</h2>
-        <!-- EMBED VIDEO YOUTUBE RESMI -->
-        <div class="youtube-player">
-            <iframe src="https://www.youtube.com/embed/jQ-VgNAziHQ?autoplay=0&rel=0" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class="film-meta">
-            <span><i class="fas fa-calendar"></i> Rilis: 2019</span>
-            <span><i class="fas fa-star"></i> Rating: 7.5/10</span>
-            <span><i class="fas fa-clock"></i> Durasi: 2j 9m</span>
-            <span><i class="fas fa-tag"></i> Genre: Aksi, Petualangan</span>
-        </div>
-        <p class="film-desc">
-            Peter Parker berangkat liburan ke Eropa bersama teman-temannya setelah peristiwa di Avengers: Endgame. Namun, liburannya terganggu ketika Nick Fury muncul dengan misi baru untuk menghentikan makhluk misterius yang mengancam dunia!
-        </p>
-    </div>
-
-    <!-- SIDEBAR IKLAN -->
-    <aside class="sidebar">
-        <div class="ad-sidebar">
-            <a href="LINK_IKLAN_ANDA" target="_blank" rel="noopener noreferrer">
-                [BANNER IKLAN 300x250 DISINI]
-            </a>
-            <small>Promo Streaming Resmi</small>
-        </div>
-        <div class="ad-sidebar">
-            <a href="LINK_IKLAN_ANDA" target="_blank" rel="noopener noreferrer">
-                [BANNER IKLAN 300x250 DISINI]
-            </a>
-            <small>Beli Tiket Bioskop Online</small>
-        </div>
-    </aside>
-</section>
-
-<!-- COMMENT SECTION -->
-<section class="container comment-section">
-    <h2 class="comment-title"><i class="fas fa-comments"></i> Komentar Pengguna</h2>
-    <div class="comment-count" id="commentCount">Total Komentar: 1,247+</div>
-    
-    <!-- Form Input Komentar -->
-    <div class="comment-input">
-        <img src="https://picsum.photos/id/64/200/200" alt="Avatar Pengguna">
-        <textarea placeholder="Tulis komentarmu tentang film ini..."></textarea>
-        <button>Kirim</button>
-    </div>
-
-    <!-- Kotak Komentar -->
-    <div class="comments-container" id="commentsContainer">
-        <!-- Komentar Awal Sebelum Sistem Otomatis Berjalan -->
-        <div class="comment-box">
-            <img src="https://picsum.photos/id/23/200/200" alt="Avatar" class="comment-avatar">
-            <div class="comment-content">
-                <div class="comment-username">Andi Wijaya</div>
-                <div class="comment-text">Ih filmnya kaya yang di bioskop aja lho! Kualitasnya bagus banget 😍</div>
-                <div class="comment-time">5 menit yang lalu</div>
+        <!-- === IKLAN POPUNDER === -->
+        <div class="popunder-ad" id="popunderAd">
+            <button class="close-popunder" id="closePopunder">&times;</button>
+            <div class="popunder-content">
+                <h4>Promo Spesial!</h4>
+                <a href="https://link-iklan-popunder.com" target="_blank" rel="noopener noreferrer">
+                    <img src="https://picsum.photos/id/23/300/200" alt="Iklan Popunder">
+                </a>
+                <p>Dapatkan diskon hingga 50% untuk langganan streaming!</p>
             </div>
         </div>
-        <div class="comment-box">
-            <img src="https://picsum.photos/id/91/200/200" alt="Avatar" class="comment-avatar">
-            <div class="comment-content">
-                <div class="comment-username">Miya Kusuma</div>
-                <div class="comment-text">Nih film ratingnya bagus 😘 Adegan aksi-nya juga seru banget!</div>
-                <div class="comment-time">3 menit yang lalu</div>
+
+        <!-- === SECTION STREAMING VIDEO + IKLAN PRE-ROLL === -->
+        <section class="stream-section container" id="stream">
+            <div class="stream-container">
+                <!-- IKLAN PRE-ROLL SEBELUM VIDEO -->
+                <div class="pre-roll-ad" id="preRollAd">
+                    <div class="ad-content">
+                        <h3>Iklan Sebelum Video</h3>
+                        <img src="https://picsum.photos/id/42/800/450" alt="Iklan Pre-Roll">
+                        <p>Tonton iklan selama <span id="adCountdown">5</span> detik atau klik <button id="skipPreRoll">Skip Iklan</button></p>
+                    </div>
+                </div>
+
+                <!-- PEMUTAR YOUTUBE EMBED -->
+                <div class="video-player">
+                    <iframe 
+                        id="youtubePlayer"
+                        width="100%" 
+                        height="auto" 
+                        src="https://www.youtube.com/embed/jQ-VgNAziHQ?enablejsapi=1&rel=0" 
+                        title="Video Film" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- INFORMASI FILM -->
+                <div class="film-info">
+                    <h2>Spider-Man: Far From Home</h2>
+                    <div class="meta-info">
+                        <span><i class="fas fa-calendar"></i> Rilis: 2019</span>
+                        <span><i class="fas fa-star"></i> Rating: 7.5/10</span>
+                        <span><i class="fas fa-clock"></i> Durasi: 2j 9m</span>
+                    </div>
+                    <p>Peter Parker kembali sebagai Spider-Man yang harus menghadapi ancaman baru di luar bumi dengan bantuan Nick Fury dan MJ.</p>
+                </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
 
-<!-- IKLAN POPUNDER -->
-<div id="popunder-ad">
-    <button class="close-popunder" id="closePopunder">
-        <i class="fas fa-times"></i>
-    </button>
-    <div class="popunder-content">
-        <h4>Promo Spesial Bulan Ini!</h4>
-        <a href="LINK_IKLAN_POPUNDER" target="_blank" rel="noopener noreferrer">
-            [IKLAN POPUNDER DISINI]
-        </a>
-        <p>Dapatkan diskon 40% untuk paket langganan YouTube Premium!</p>
-    </div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-    <div class="container footer-content">
-        <div class="footer-section">
-            <h3><i class="fas fa-play-circle"></i> CineStream</h3>
-            <p>Website streaming film legal menggunakan embed YouTube. Semua konten memiliki izin resmi dari pemilik hak cipta.</p>
-            <div class="social-links">
-                <a href="LINK_SOSIAL" target="_blank"><i class="fab fa-facebook"></i></a>
-                <a href="LINK_SOSIAL" target="_blank"><i class="fab fa-instagram"></i></a>
-                <a href="LINK_SOSIAL" target="_blank"><i class="fab fa-twitter"></i></a>
-                <a href="LINK_SOSIAL" target="_blank"><i class="fab fa-youtube"></i></a>
+        <!-- === SECTION KOMENTAR OTOMATIS === -->
+        <section class="comment-section container" id="comment">
+            <h2><i class="fas fa-comments"></i> Komentar Pengguna (1.5K+)</h2>
+            <div class="comment-count">Total Komentar: <span id="totalComment">1.527</span>+</div>
+            
+            <!-- FORM INPUT KOMENTAR PENGGUNA -->
+            <div class="comment-input">
+                <img src="https://picsum.photos/id/64/50/50" alt="Avatar Pengguna" class="user-avatar">
+                <textarea placeholder="Tulis komentarmu disini..."></textarea>
+                <button>Kirim</button>
             </div>
-        </div>
-        <div class="footer-section">
-            <h3><i class="fas fa-link"></i> Tautan Berguna</h3>
-            <a href="#home">Beranda</a>
-            <a href="#movies">Koleksi Film</a>
-            <a href="#series">Koleksi Serial</a>
-            <a href="#">Kebijakan Privasi</a>
-            <a href="#">Syarat Penggunaan</a>
-        </div>
-        <div class="footer-section">
-            <h3><i class="fas fa-globe"></i> Platform Legal Lain</h3>
-            <a href="https://www.youtube.com" target="_blank">YouTube</a>
-            <a href="https://www.netflix.com/id/" target="_blank">Netflix</a>
-            <a href="https://www.vidio.com" target="_blank">Vidio</a>
-            <a href="https://www.disneyplus.com/id" target="_blank">Disney+ Hotstar</a>
-        </div>
-    </div>
-    <div class="copyright">
-        <p>© 2026 CineStream - Hanya Konten Legal yang Disediakan | Hak Cipta Dilindungi</p>
-    </div>
-</footer>
 
-<!-- JAVASCRIPT FITUR INTERAKTIF -->
-<script>
-    // Toggle Mobile Menu
-    const menuToggle = document.getElementById('menuToggle');
-    const mobileMenu = document.getElementById('mobileMenu');
-    menuToggle.addEventListener('click', () => {
-        mobileMenu.classList.toggle('active');
-    });
+            <!-- KOTAK KOMENTAR OTOMATIS -->
+            <div class="comments-container" id="commentsContainer">
+                <!-- KOMENTAR AWAL -->
+                <div class="comment-box">
+                    <img src="https://picsum.photos/id/23/50/50" alt="Avatar" class="comment-avatar">
+                    <div class="comment-content">
+                        <div class="comment-username">Andi Wijaya</div>
+                        <p class="comment-text">Film ini luar biasa! Adegan aksi nya bikin merinding.</p>
+                        <div class="comment-time">5 menit yang lalu</div>
+                    </div>
+                </div>
 
-    // Tampilkan Iklan Popunder setelah 7 detik
-    const popunderAd = document.getElementById('popunder-ad');
-    const closePopunder = document.getElementById('closePopunder');
-    
-    setTimeout(() => {
-        popunderAd.classList.add('active');
-    }, 7000);
-
-    closePopunder.addEventListener('click', () => {
-        popunderAd.classList.remove('active');
-    });
-
-    document.addEventListener('click', (e) => {
-        if (e.target === popunderAd) popunderAd.classList.remove('active');
-    });
-
-    // === SISTEM KOMENTAR DENGAN NAMA & TEKS ACAK ===
-    // Daftar nama depan dan belakang Indonesia yang umum
-    const namaDepan = ["Andi", "Miya", "Budi", "Siti", "Rizky", "Luna", "Eko", "Dewi", "Fajar", "Nina", 
-                       "Gilang", "Putri", "Hendra", "Ayu", "Joko", "Lia", "Krisna", "Rina", "Bagus", "Citra",
-                       "Doni", "Erna", "Febri", "Gita", "Heri", "Indah", "Jefri", "Kiki", "Lukman", "Maya",
-                       "Nova", "Oka", "Pandu", "Qori", "Robby", "Santi", "Toni", "Umi", "Vino", "Wulan"];
-    
-    const namaBelakang = ["Wijaya", "Kusuma", "Santoso", "Sari", "Pratama", "Putri", "Susanto", "Lestari", 
-                          "Rahmawan", "Dewi", "Setiawan", "Ningsih", "Hadi", "Yanti", "Permana", "Cahyani", 
-                          "Wibowo", "Astuti", "Maulana", "Fitriani", "Hartono", "Jaya", "Mulyadi", "Purnomo", 
-                          "Rizaldi", "Saputra", "Tjahjadi", "Utomo", "Yudha", "Zainal"];
-
-    // Daftar template komentar yang bisa dikombinasikan
-    const templateKomentar = [
-        "Film ini luar biasa! Adegan [bagian] nya bikin merinding.",
-        "Suka banget sama akting [aktor] disini, sangat natural!",
-        "Kualitas gambarnya sangat jernih, kayak nonton di bioskop aja.",
-        "Alur cerita nya tidak terlalu cepat, pas banget buat ngerti setiap detail.",
-        "OST-nya juga enak banget, bikin suasana jadi lebih seru!",
-        "CGI-nya sangat memukau, tidak menyangka bisa sebaik ini.",
-        "Karakter [karakter] sangat menarik, pengen tahu kelanjutannya!",
-        "Ini adalah salah satu film terbaik tahun ini menurutku!",
-        "Adegan aksi nya sangat epik, sudah nonton berkali-kali tetap suka.",
-        "Plot twist nya bikin terkejut banget, tidak pernah menyangka itu bakal terjadi.",
-        "Penuturan cerita nya jelas, tidak bikin bingung meskipun banyak adegan.",
-        "Worth to watch deh, uang buat langganan tidak sia-sia!",
-        "Kostum dan setting tempatnya sangat pas dengan era cerita.",
-        "Bikin nangis juga pas ada adegan [emosi], sangat menyentuh hati.",
-        "Rating film ini memang pantas tinggi, benar-benar bagus!"
-    ];
-
-    // Daftar variabel untuk mengisi template komentar
-    const bagianFilm = ["aksi", "drama", "komedi", "fantasi", "petualangan"];
-    const namaAktor = ["Tom Holland", "Zendaya", "Jake Gyllenhaal", "Samuel L. Jackson"];
-    const namaKarakter = ["Spider-Man", "MJ", "Mysterio", "Nick Fury"];
-    const jenisEmosi = ["sedih", "bahagia", "kebersamaan"];
-
-    // Fungsi buat nama lengkap acak
-    function buatNamaAcak() {
-        const depan = namaDepan[Math.floor(Math.random() * namaDepan.length)];
-        const belakang = namaBelakang[Math.floor(Math.random() * namaBelakang.length)];
-        return `${depan} ${belakang}`;
-    }
-
-    // Fungsi buat komentar acak dari template
-    function buatKomentarAcak() {
-        let komentar = templateKomentar[Math.floor(Math.random() * templateKomentar.length)];
-        
-        // Ganti placeholder dengan kata acak
-        komentar = komentar.replace("[bagian]", bagianFilm[Math.floor(Math.random() * bagianFilm.length)]);
-        komentar = komentar.replace("[aktor]", namaAktor[Math.floor(Math.random() * namaAktor.length)]);
-        komentar = komentar.replace("[karakter]", namaKarakter[Math.floor(Math.random() * namaKarakter.length)]);
-        komentar = komentar.replace("[emosi]", jenisEmosi[Math.floor(Math.random() * jenisEmosi.length)]);
-        
-        return komentar;
-    }
-
-    // Fungsi buat waktu komentar acak
-    function buatWaktuAcak() {
-        const waktuOpsi = ["Baru saja", "1 menit yang lalu", "2 menit yang lalu", "3 menit yang lalu", 
-                           "4 menit yang lalu", "5 menit yang lalu", "6 menit yang lalu", "7 menit yang lalu",
-                           "8 menit yang lalu", "9 menit yang lalu", "10 menit yang lalu"];
-        return waktuOpsi[Math.floor(Math.random() * waktuOpsi.length)];
-    }
-
-    // Fungsi buat avatar acak
-    function buatAvatarAcak() {
-        const idAvatar = Math.floor(Math.random() * 200); // ID gambar acak dari picsum.photos
-        return `https://picsum.photos/id/${idAvatar}/200/200`;
-    }
-
-    // Update jumlah komentar setiap beberapa detik
-    const commentCount = document.getElementById('commentCount');
-    let totalKomentar = 1247;
-    setInterval(() => {
-        totalKomentar += Math.floor(Math.random() * 5); // Tambah 0-4 komentar setiap update
-        commentCount.textContent = `Total Komentar: ${totalKomentar.toLocaleString('id-ID')}+`;
-    }, 30000); // Update total setiap 30 detik
-
-    // Tambah komentar baru setiap 5 detik
-    const commentsContainer = document.getElementById('commentsContainer');
-    setInterval(() => {
-        const nama = buatNamaAcak();
-        const komentar = buatKomentarAcak();
-        const waktu = buatWaktuAcak();
-        const avatar = buatAvatarAcak();
-
-        // Buat elemen komentar baru
-        const commentBox = document.createElement('div');
-        commentBox.classList.add('comment-box');
-        
-        commentBox.innerHTML = `
-            <img src="${avatar}" alt="Avatar" class="comment-avatar">
-            <div class="comment-content">
-                <div class="comment-username">${nama}</div>
-                <div class="comment-text">${komentar}</div>
-                <div class="comment-time">${waktu}</div>
+                <div class="comment-box">
+                    <img src="https://picsum.photos/id/91/50/50" alt="Avatar" class="comment-avatar">
+                    <div class="comment-content">
+                        <div class="comment-username">Miya Kusuma</div>
+                        <p class="comment-text">Kualitas gambarnya sangat jernih, kayak nonton di bioskop aja.</p>
+                        <div class="comment-time">3 menit yang lalu</div>
+                    </div>
+                </div>
             </div>
-        `;
-        
-        // Tambah ke kontainer dan gulir ke bawah
-        commentsContainer.appendChild(commentBox);
-        commentsContainer.scrollTop = commentsContainer.scrollHeight;
+        </section>
 
-        // Hapus komentar lama jika sudah terlalu banyak (agar tidak berat)
-        if (commentsContainer.children.length > 50) {
-            commentsContainer.removeChild(commentsContainer.children[0]);
-        }
-    }, 5000); // Tambah komentar baru setiap 5 detik
+        <!-- === FOOTER === -->
+        <footer>
+            <div class="container footer-content">
+                <div class="footer-section">
+                    <h3>CineStream</h3>
+                    <p>Website streaming film legal dengan konten dari YouTube resmi.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
 
-    // Scroll Efek Header
-    window.addEventListener('scroll', () => {
-        const header = document.querySelector('header');
-        header.style.padding = window.scrollY > 50 ? '10px 0' : '15px 0';
-    });
-</script>
-</body>
+                <div class="footer-section">
+                    <h3>Menu</h3>
+                    <ul>
+                        <li><a href="#stream">Streaming</a></li>
+                        <li><a href="#movie">Koleksi Film</a></li>
+                        <li><a href="#comment">Komentar</a></li>
+                        <li><a href="#about">Tentang Kami</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Kontak</h3>
+                    <p>Email: support@cinestream.id</p>
+                    <p>Alamat: Jakarta, Indonesia</p>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 CineStream - Semua konten dari YouTube Resmi
+            </div>
+        </footer>
+
+        <!-- === SCRIPT KONTROL === -->
+        <script>
+            // Kontrol Iklan Pre-Roll
+            const preRollAd = document.getElementById('preRollAd');
+            const skipPreRoll = document.getElementById('skipPreRoll');
+            const adCountdown = document.getElementById('adCountdown');
+            
+            let countdown = 5;
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                adCountdown.textContent = countdown;
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    preRollAd.style.display = 'none';
+                }
+            }, 1000);
+
+            skipPreRoll.addEventListener('click', () => {
+                preRollAd.style.display = 'none';
+            });
+
+            // Kontrol Iklan Popunder
+            const popunderAd = document.getElementById('popunderAd');
+            const closePopunder = document.getElementById('closePopunder');
+            
+            setTimeout(() => {
+                popunderAd.style.display = 'block';
+            }, 7000);
+
+            closePopunder.addEventListener('click', () => {
+                popunderAd.style.display = 'none';
+            });
+
+            // === SISTEM KOMENTAR OTOMATIS ===
+            const namaDepan = ["Andi", "Miya", "Budi", "Siti", "Rizky", "Luna", "Eko", "Dewi", "Fajar", "Nina",
+                               "Gilang", "Putri", "Hendra", "Ayu", "Joko", "Lia", "Krisna", "Rina", "Bagus", "Citra"];
+            const namaBelakang = ["Wijaya", "Kusuma", "Santoso", "Sari", "Pratama", "Putri", "Susanto", "Lestari"];
+
+            const templateKomentar = [
+                "Film ini luar biasa! Adegan [bagian] nya bikin merinding.",
+                "Suka banget sama akting [aktor] disini, sangat natural!",
+                "Kualitas gambarnya sangat jernih, kayak nonton di bioskop aja.",
+                "Alur cerita nya tidak terlalu cepat, pas banget buat ngerti setiap detail.",
+                "OST-nya juga enak banget, bikin suasana jadi lebih seru!"
+            ];
+
+            const bagianFilm = ["aksi", "drama", "komedi", "fantasi"];
+            const namaAktor = ["Tom Holland", "Zendaya", "Jake Gyllenhaal"];
+
+            // Fungsi buat nama acak
+            function buatNamaAcak() {
+                const depan = namaDepan[Math.floor(Math.random() * namaDepan.length)];
+                const belakang = namaBelakang[Math.floor(Math.random() * namaBelakang.length)];
+                return `${depan} ${belakang}`;
+            }
+
+            // Fungsi buat komentar acak
+            function buatKomentarAcak() {
+                let komentar = templateKomentar[Math.floor(Math.random() * templateKomentar.length)];
+                komentar = komentar.replace("[bagian]", bagianFilm[Math.floor(Math.random() * bagianFilm.length)]);
+                komentar = komentar.replace("[aktor]", namaAktor[Math.floor(Math.random() * namaAktor.length)]);
+                return komentar;
+            }
+
+            // Tambah komentar otomatis setiap 3 detik
+            const commentsContainer = document.getElementById('commentsContainer');
+            setInterval(() => {
+                const nama = buatNamaAcak();
+                const komentar = buatKomentarAcak();
+                
+                const commentBox = document.createElement('div');
+                commentBox.className = 'comment-box';
+                commentBox.innerHTML = `
+                    <img src="https://picsum.photos/id/${Math.floor(Math.random() * 100)}/50/50" alt="Avatar" class="comment-avatar">
+                    <div class="comment-content">
+                        <div class="comment-username">${nama}</div>
+                        <p class="comment-text">${komentar}</p>
+                        <div class="comment-time">${Math.floor(Math.random() * 10)} menit yang lalu</div>
+                    </div>
+                `;
+
+                commentsContainer.appendChild(commentBox);
+                // Gulir ke bawah otomatis
+                commentsContainer.scrollTop = commentsContainer.scrollHeight;
+
+                // Hapus komentar lama jika terlalu banyak
+                if (commentsContainer.children.length > 50) {
+                    commentsContainer.removeChild(commentsContainer.children[0]);
+                }
+            }, 3000);
+
+            // Kontrol Mobile Menu
+            const menuToggle = document.getElementById('menuToggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            menuToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+        </script>
+    </body>
 </html>
